@@ -17,4 +17,10 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// 2. initialize Firestore service
+const db = getFirestore(app)
+
+// 3. export the Firestore service from this js file so other parts of your app can use it
 export { db }
+
