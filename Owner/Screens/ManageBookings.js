@@ -7,6 +7,7 @@ import { db, auth } from '../firebaseConfig';
 
 const ManageBookings = ({navigation}) => {
 
+    //go to listing form
     AddListingPressed=()=>
     {
         navigation.navigate("Add Listing")
