@@ -10,8 +10,8 @@ import { signOut } from "firebase/auth";
 const LoginScreen = ({navigation}) => {
 
     // form fields
-    const [emailFromUI, setEmailFromUI] = useState("")
-    const [passwordFromUI, setPasswordFromUI] = useState("")
+    const [emailFromUI, setEmailFromUI] = useState("sam@gmail.com")
+    const [passwordFromUI, setPasswordFromUI] = useState("qwerty")
     const [errorMessageLabel, setErrorMessageLabel] = useState("")
 
     const loginPressed = async () => {
