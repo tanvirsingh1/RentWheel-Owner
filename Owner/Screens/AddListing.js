@@ -29,6 +29,7 @@ const AddListing = ({ navigation }) => {
     );
     const [isElectric, setIsAvailable] = useState(true);
     const [imageFromGallery, setImageFromGallery] = useState(null);
+    const [resultsLabel, setResultsLabel] = useState("");
     const [mileage, setMileage] = useState("");
     const [capacity, setCapacity] = useState("");
     const [enginePower, setEnginePower] = useState("");
