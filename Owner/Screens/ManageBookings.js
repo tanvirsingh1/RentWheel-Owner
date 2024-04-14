@@ -138,8 +138,8 @@ const styles = StyleSheet.create({
         paddingVertical: 4
     },
     image: {
-        width: 100, // Adjust the width as needed
-        height: 100, // Adjust the height as needed
-        resizeMode: 'cover', // or 'contain' or 'stretch' as per your requirement
+        width: 100,
+        height: 100,
+        resizeMode: 'cover',
     },
 });
