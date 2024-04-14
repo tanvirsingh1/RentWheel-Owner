@@ -6,8 +6,8 @@ import { db, auth } from '../firebaseConfig';
 const ManageBookings = ({ navigation }) => {
     const [bookings, setBookings] = useState([]);
 
-    const AddListingPressed = () => {
-        navigation.navigate("Add Listing");
+    const CheckListings = () => {
+        navigation.navigate("Listing");
     }
 
     const cancelBooking = async (bookingId) => {
@@ -65,10 +65,13 @@ const ManageBookings = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.body}>
             <View style={styles.container}>
-                <Text style={styles.text}>Got anything new?</Text>
+                {/* <Text style={styles.text}>Got anything new?</Text>
                 <Pressable onPress={AddListingPressed} style={styles.btn}>
                     <Text style={styles.btnLabel}>Add New Listing</Text>
-                </Pressable>
+    </Pressable>*/}
+                <Pressable onPress={CheckListings} style={styles.btn}>
+                    <Text style={styles.btnLabel}>Check All ListingsScreen</Text>
+                </Pressable> 
                 <Text style={styles.headingText}>Bookings</Text>
                 <FlatList
                     data={bookings}
@@ -139,7 +142,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: 100,
-        height: 100,
-        resizeMode: 'cover',
+        height: 100, // Adjust the height as needed
+        resizeMode: 'cover', // or 'contain' or 'stretch' as per your requirement
     },
 });

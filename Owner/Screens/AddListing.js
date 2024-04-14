@@ -17,7 +17,7 @@ import * as ImagePicker from "expo-image-picker";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-
+import { useEffect } from "react";
 const AddListing = ({ navigation }) => {
     const [carMake, setCarMake] = useState("");
     const [carModel, setCarModel] = useState("");
@@ -80,6 +80,28 @@ const AddListing = ({ navigation }) => {
         setResultsLabel(`Path to photo: ${result.assets[0].uri}`);
         setImageFromGallery(result.assets[0].uri);
     };
+
+    const clearInputFields = () => {
+        setCarMake("");
+        setCarModel("");
+        setYear("");
+        setColor("");
+        setPricePerDay("");
+        setAddressFromUI("1750 Finch Avenue East, Toronto, ON");
+        setIsAvailable(true);
+        setImageFromGallery(null);
+        setResultsLabel("");
+        setMileage("");
+        setCapacity("");
+        setEnginePower("");
+      };
+      useEffect(() => {
+        // Function to execute when the screen gains focus
+    const unsubscribe = navigation.addListener("focus", () => {
+clearInputFields()
+    });
+    return unsubscribe;
+  }, [navigation]);
 
     const doGeocoding = async () => {
         console.log(`Geocoding the address ${addressFromUI}`);
@@ -146,7 +168,7 @@ const AddListing = ({ navigation }) => {
             });
             console.log("Document written with ID: ", docRef.id);
             alert("Listing created successfully!");
-            navigation.navigate("Manage Bookings")
+            navigation.navigate("Listing")
 
         } catch (error) {
             console.error("Error adding document: ", error);

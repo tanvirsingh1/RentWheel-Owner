@@ -2,14 +2,20 @@ import {View, Button, Text} from "react-native"
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import { useEffect,useState } from "react";
 import LoginScreen from "./Screens/Login";
 import ManageBookings from "./Screens/ManageBookings";
+import ListingsScreen from "./Screens/Listingscreen";
 import AddListing from "./Screens/AddListing"
-
 import { auth } from './firebaseConfig';
 import { signOut } from "firebase/auth";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Entypo } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
+
+
+const Tab = createBottomTabNavigator();
 const logoutPressed = async (navigation) => {
   // TODO: Code to logout
   console.log("Logging the user out..")
@@ -30,37 +36,77 @@ const logoutPressed = async (navigation) => {
 }
 
 const Stack = createStackNavigator();
+const MainTabNavigator = () => (
+  <Tab.Navigator
+  
+    screenOptions={({ route }) => ({
 
+      tabBarIcon: ({ focused, color, size }) => {
+      
+        if (route.name === 'Add Listing') {
+          return <Entypo name="plus" size={24} color="black" />;
+        }
+        if (route.name === 'Manage Bookings') {
+          return <FontAwesome5 name="list" size={24} color="black" />;
+        }
+      },
+      
+      tabBarActiveTintColor: '#7C4DFF',
+      tabBarInactiveTintColor: 'gray',
+    })}
+  >
+    <Tab.Screen name="Manage Bookings" component={ManageBookings}  options={{
+          headerRight: () => (
+            <View style={{ margin: 0 }}>
+              <Button title="Logout" onPress={logoutPressed} />
+            </View>
+          ),
+        }} />
+    <Tab.Screen name="Add Listing" component={AddListing}  options={{
+          headerRight: () => (
+            <View style={{ margin: 0 }}>
+              <Button title="Logout" onPress={logoutPressed} />
+            </View>
+          ),
+        }} />
+  </Tab.Navigator>
+);
 
 export default function App() {
+  const [user, setUser] = useState(null);
  
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+
+    return unsubscribe;
+  }, []);
+
   return (
     <NavigationContainer>
-      <Stack.Navigator>    
-        <Stack.Screen name="Login" component={LoginScreen}/>
-        <Stack.Screen name="Manage Bookings" component={ManageBookings} 
-          options={({ navigation }) => ({
-            headerRight: () => (
-              <View style={{ margin: 10 }}>
-                <Button title="Logout" onPress={() => logoutPressed(navigation)} />
-              </View>
-            ),
-            headerLeft: null, // If you want to remove the back button, set this to null
-          })}
-                     
-      />
-       <Stack.Screen name="Add Listing" component={AddListing}
-       options={({ navigation }) => ({
-        headerRight: () => (
-          <View style={{ margin: 10 }}>
-            <Button title="Logout" onPress={() => logoutPressed(navigation)} />
-          </View>
-        ),
-        
-      })}/>
-
-        
-      </Stack.Navigator>
+      {user ? (
+        <Stack.Navigator initialRouteName="Main">
+          <Stack.Screen
+            name="Main"
+            component={MainTabNavigator}
+            options={{
+              headerRight: () => (
+                <View style={{ margin: 10 }}>
+                  <Button title="Logout" onPress={() => logoutPressed(navigation)} />
+                </View>
+              ),
+              headerLeft: null,
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen name="Listing" component={ListingsScreen} />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator>
+          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: true }} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   )
 }
