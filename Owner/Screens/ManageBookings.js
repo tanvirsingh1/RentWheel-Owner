@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, Pressable, FlatList, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Pressable, FlatList, SafeAreaView,Image } from 'react-native';
 import { useState, useEffect } from "react";
-import { collection, getDocs, query, where, onSnapshot, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where, onSnapshot, doc, getDoc, updateDoc  } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfig';
 
 const ManageBookings = ({ navigation }) => {
@@ -48,6 +48,7 @@ const ManageBookings = ({ navigation }) => {
                             const listingData = { id: listingDoc.id, ...listingDoc.data() };
                             const booking = { id: docu.id, reservation: reservation, listing: listingData };
                             bookingsData.push(booking);
+                            console.log("Image url is",listingData.imageUrl)
                         }
                     }
                     setBookings(bookingsData);
@@ -74,7 +75,8 @@ const ManageBookings = ({ navigation }) => {
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <View>
-                            <Text>{item.listing.carMake} {item.listing.carModel} {item.reservation.Status}</Text>
+                           <Text>{item.listing.carMake} {item.listing.carModel} {item.reservation.Status} {item.reservation.date}{item.ls}</Text>
+                           <Image source={{ uri: item.listing.imageUrl }} style={styles.image} />
                             <Pressable onPress={() => cancelBooking(item.id)}
                                 style={({ pressed }) => ({
                                     borderWidth: 1,
@@ -134,5 +136,10 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 18,
         paddingVertical: 4
-    }
+    },
+    image: {
+        width: 100, // Adjust the width as needed
+        height: 100, // Adjust the height as needed
+        resizeMode: 'cover', // or 'contain' or 'stretch' as per your requirement
+    },
 });
