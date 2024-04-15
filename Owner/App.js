@@ -63,14 +63,14 @@ const TabContainerComponent = () => {
       headerTitleAlign:"left" })}/>
     <Tab.Screen name="All Listings" component={ListingsScreen} options={({ navigation }) => ({
           headerRight: () => (
-            <View style={{ margin: 10 }}>
+            
             <Button
               onPress={() => { gotoAddListing(navigation) }}
               title="Add Listing"
               color="#7C4DFF"
-         
+            
             />
-            </View>
+          
           )
         })}/>
    </Tab.Navigator>
@@ -85,9 +85,9 @@ export default function App() {
         <Stack.Screen name="Login" component={LoginScreen}/>
           <Stack.Screen name="Lend a Wheel" component={TabContainerComponent} options={({ navigation }) => ({
               headerRight: () => (
-                <View style={{ margin: 10 }}>
-                  <Button title="Logout" onPress={() => logoutPressed(navigation)} color="red"/>
-                </View>
+                
+                  <Button title="Logout" onPress={() => logoutPressed(navigation)} color="red" />
+              
               ),
               headerLeft: null, // If you want to remove the back button, set this to null
             })}/>
