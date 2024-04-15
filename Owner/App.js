@@ -11,8 +11,8 @@ import { signOut } from "firebase/auth";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-
-
+import { AntDesign } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 
 const Stack = createStackNavigator();
@@ -37,6 +37,9 @@ const logoutPressed = async (navigation) => {
   }            
 }
 
+const gotoAddListing = (navigation) => {
+  navigation.navigate("Add Listing");
+};
 
 const TabContainerComponent = () => {
   
@@ -45,17 +48,30 @@ const TabContainerComponent = () => {
       tabBarIcon: ({ focused, color, size }) => {
       
         if (route.name === 'All Listings') {
-          return <Entypo name="plus" size={24} color="black" />;
+         
+          return  <Feather name="list" size={24} color="black" />
+
         }
         if (route.name === 'Manage Bookings') {
-          return <FontAwesome5 name="list" size={24} color="black" />;
+          return <AntDesign name="book" size={24} color="black" />;
         }
       },
     tabBarActiveTintColor: "#7C4DFF",
     tabBarInactiveTintColor: "gray",
 })}>
       <Tab.Screen name="Manage Bookings" component={ManageBookings} />
-    <Tab.Screen name="All Listings" component={ListingsScreen} />
+    <Tab.Screen name="All Listings" component={ListingsScreen} options={({ navigation }) => ({
+          headerRight: () => (
+            <View style={{ margin: 10 }}>
+            <Button
+              onPress={() => { gotoAddListing(navigation) }}
+              title="Add Listing"
+              color="#7C4DFF"
+         
+            />
+            </View>
+          )
+        })}/>
    </Tab.Navigator>
   )
 }
@@ -69,7 +85,7 @@ export default function App() {
           <Stack.Screen name="Lend a Wheel" component={TabContainerComponent} options={({ navigation }) => ({
               headerRight: () => (
                 <View style={{ margin: 10 }}>
-                  <Button title="Logout" onPress={() => logoutPressed(navigation)} />
+                  <Button title="Logout" onPress={() => logoutPressed(navigation)} color="red"/>
                 </View>
               ),
               headerLeft: null, // If you want to remove the back button, set this to null

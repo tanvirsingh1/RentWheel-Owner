@@ -7,22 +7,44 @@ import * as Location from 'expo-location';
 const ListingsScreen = ({navigation}) => {
     const [listings, setListings] = useState([]);
 
+    const toAddress = async (coords) => {
+        try {
+            const postalAddresses = await Location.reverseGeocodeAsync(coords, {});
+            const result = postalAddresses[0];
+            if (result === undefined) {
+                return "No results found.";
+            }
+            return `${result.street}, ${result.city}\, ${result.region}, ${result.country}`;
+        } catch(err) {
+            console.error(err);
+            return "Error fetching address.";
+        }
+    };
 
-    const AddListing=()=>
-    {
-        navigation.navigate("Add Listing")
-    }
+   
+    const requestPermissions = async () => {
+        try {
+            const { status } = await Location.requestForegroundPermissionsAsync();
+            if (status === 'granted') {
+                alert("Permission granted!");
+            } else {
+                alert("Permission denied or not provided");
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
-    
     useEffect(() => {
+        requestPermissions();
         const ownerListingsQuery = query(collection(db, 'Listings'), where('ownerId', '==', auth.currentUser.uid));
 
-        const unsubscribe = onSnapshot(ownerListingsQuery, (snapshot) => {
-            const listingsData = snapshot.docs.map(doc => ({
+        const unsubscribe = onSnapshot(ownerListingsQuery, async (snapshot) => {
+            const listingsData = await Promise.all(snapshot.docs.map(async doc => ({
                 id: doc.id,
-                listing: doc.data(), // Only fetch the carMake property
-                address: Location.reverseGeocodeAsync({latitude: doc.data().latitude, longitude:doc.data().longitude}, {})[0]
-            }));
+                listing: doc.data(),
+                address: await toAddress({ latitude: doc.data().latitude, longitude: doc.data().longitude })
+            })));
             setListings(listingsData);
         });
 
@@ -32,10 +54,6 @@ const ListingsScreen = ({navigation}) => {
     return (
         <SafeAreaView style={styles.body}>
             <View style={styles.container}>
-            <Pressable onPress={AddListing} style={styles.btn}>
-                    <Text style={styles.btnLabel}>Add Listing</Text>
-            </Pressable> 
-               
                 <FlatList
                     data={listings}
                     keyExtractor={(item) => item.id}
@@ -52,8 +70,8 @@ const ListingsScreen = ({navigation}) => {
                             <Text>Capacity: <Text style={{fontWeight:"bold"}}>{item.listing.capacity} L</Text></Text>
                             <Text>Engine Power: <Text style={{fontWeight:"bold"}}>{item.listing.enginePower} HP</Text></Text>
                             <Text>Mileage: <Text style={{fontWeight:"bold"}}>{item.listing.mileage} km</Text></Text>
-                            <Text>Address: <Text style={{fontWeight:"bold"}}>{item.address}</Text></Text>
-                        </View></View></View>
+                            
+                        </View></View><Text><Text style={{fontWeight:"bold"}}>{item.address}</Text></Text></View>
                     )}
                     ItemSeparatorComponent={() => {
                         return <View style={styles.listItemBorder}></View>;
@@ -73,6 +91,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        backgroundColor: '#fff',
     },
     heading: {
         fontSize: 24,
@@ -107,9 +126,10 @@ const styles = StyleSheet.create({
         marginVertical:5,
       },
       image: {
-        width: 120,
-        height: 120, // Adjust the height as needed
+        width: 100,
+        height: 100, // Adjust the height as needed
         resizeMode: 'cover', // or 'contain' or 'stretch' as per your requirement
+        alignSelf:"center",
     },
 });
 
