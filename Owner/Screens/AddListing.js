@@ -318,7 +318,7 @@ clearInputFields()
                         >
                             <Text style={styles.uploadLabel}>Upload</Text>
                         </Pressable>
-
+                            
                         {imageFromGallery && (
                             <Image
                                 source={{ uri: imageFromGallery }}
