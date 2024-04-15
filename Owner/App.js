@@ -2,7 +2,6 @@ import {View, Button, Text} from "react-native"
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useEffect,useState } from "react";
 import LoginScreen from "./Screens/Login";
 import ManageBookings from "./Screens/ManageBookings";
 import ListingsScreen from "./Screens/Listingscreen";
@@ -12,10 +11,13 @@ import { signOut } from "firebase/auth";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 
-
+const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
 const logoutPressed = async (navigation) => {
   // TODO: Code to logout
   console.log("Logging the user out..")
@@ -35,78 +37,63 @@ const logoutPressed = async (navigation) => {
   }            
 }
 
-const Stack = createStackNavigator();
-const MainTabNavigator = () => (
-  <Tab.Navigator
-  
-    screenOptions={({ route }) => ({
+const gotoAddListing = (navigation) => {
+  navigation.navigate("Add Listing");
+};
 
+const TabContainerComponent = () => {
+  
+  return (
+    <Tab.Navigator screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
       
-        if (route.name === 'Add Listing') {
-          return <Entypo name="plus" size={24} color="black" />;
+        if (route.name === 'All Listings') {
+         
+          return  <Feather name="list" size={24} color="black" />
+
         }
         if (route.name === 'Manage Bookings') {
-          return <FontAwesome5 name="list" size={24} color="black" />;
+          return <AntDesign name="book" size={24} color="black" />;
         }
       },
-      
-      tabBarActiveTintColor: '#7C4DFF',
-      tabBarInactiveTintColor: 'gray',
-    })}
-  >
-    <Tab.Screen name="Manage Bookings" component={ManageBookings}  options={{
+    tabBarActiveTintColor: "#7C4DFF",
+    tabBarInactiveTintColor: "gray",
+})}>
+      <Tab.Screen name="Manage Bookings" component={ManageBookings} />
+    <Tab.Screen name="All Listings" component={ListingsScreen} options={({ navigation }) => ({
           headerRight: () => (
-            <View style={{ margin: 0 }}>
-              <Button title="Logout" onPress={logoutPressed} />
+            <View style={{ margin: 10 }}>
+            <Button
+              onPress={() => { gotoAddListing(navigation) }}
+              title="Add Listing"
+              color="#7C4DFF"
+         
+            />
             </View>
-          ),
-        }} />
-    <Tab.Screen name="Add Listing" component={AddListing}  options={{
-          headerRight: () => (
-            <View style={{ margin: 0 }}>
-              <Button title="Logout" onPress={logoutPressed} />
-            </View>
-          ),
-        }} />
-  </Tab.Navigator>
-);
+          )
+        })}/>
+   </Tab.Navigator>
+  )
+}
 
 export default function App() {
-  const [user, setUser] = useState(null);
  
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user);
-    });
-
-    return unsubscribe;
-  }, []);
-
-  return (
-    <NavigationContainer>
-      {user ? (
-        <Stack.Navigator initialRouteName="Main">
-          <Stack.Screen
-            name="Main"
-            component={MainTabNavigator}
-            options={{
+  return ( 
+      < NavigationContainer>
+         <Stack.Navigator>    
+        <Stack.Screen name="Login" component={LoginScreen}/>
+          <Stack.Screen name="Lend a Wheel" component={TabContainerComponent} options={({ navigation }) => ({
               headerRight: () => (
                 <View style={{ margin: 10 }}>
-                  <Button title="Logout" onPress={() => logoutPressed(navigation)} />
+                  <Button title="Logout" onPress={() => logoutPressed(navigation)} color="red"/>
                 </View>
               ),
-              headerLeft: null,
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen name="Listing" component={ListingsScreen} />
+              headerLeft: null, // If you want to remove the back button, set this to null
+            })}/>
+          <Stack.Screen name="Add Listing" component={AddListing} />
+         
         </Stack.Navigator>
-      ) : (
-        <Stack.Navigator>
-          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: true }} />
-        </Stack.Navigator>
-      )}
-    </NavigationContainer>
+         
+      </NavigationContainer>
   )
 }

@@ -3,12 +3,8 @@ import { useState, useEffect } from "react";
 import { collection, getDocs, query, where, onSnapshot, doc, getDoc, updateDoc  } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfig';
 
-const ManageBookings = ({ navigation }) => {
+const ManageBookings = ({  }) => {
     const [bookings, setBookings] = useState([]);
-
-    const CheckListings = () => {
-        navigation.navigate("Listing");
-    }
 
     const cancelBooking = async (bookingId) => {
         try {
@@ -43,19 +39,20 @@ const ManageBookings = ({ navigation }) => {
                 const unsubscribe = onSnapshot(ownerBookingsQuery, async (snapshot) => {
                     const bookingsData = [];
                     for (const docu of snapshot.docs) {
-                        console.log("data is", docu.data())
+                       
                         const reservation = docu.data();
                        
                         const listingRef = doc(db, 'Listings', reservation.listingId)
+                        const RenterRef = doc(db, 'Renters', reservation.renterId)
                         const listingDoc = await getDoc(listingRef);
-                        console.log("Listing is",listingDoc.data())
-                      
-                    
-                        if (listingDoc.exists()) {
+                        const renterDoc = await getDoc(RenterRef);
+    
+                        if (listingDoc.exists() && renterDoc.exists()) {
                             const listingData = { id: listingDoc.id, ...listingDoc.data() };
-                            const booking = { id: docu.id, reservation: reservation, listing: listingData };
+                            const renterData = { id: renterDoc.id, ...renterDoc.data() };
+                            const booking = { id: docu.id, reservation: reservation, listing: listingData, renter: renterData };
                             bookingsData.push(booking);
-                           
+                            
                         }
                        
                     }
@@ -73,44 +70,60 @@ const ManageBookings = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.body}>
             <View style={styles.container}>
-                {/* <Text style={styles.text}>Got anything new?</Text>
-                <Pressable onPress={AddListingPressed} style={styles.btn}>
-                    <Text style={styles.btnLabel}>Add New Listing</Text>
-    </Pressable>*/}
-                <Pressable onPress={CheckListings} style={styles.btn}>
-                    <Text style={styles.btnLabel}>Check All ListingsScreen</Text>
-                </Pressable> 
-                <Text style={styles.headingText}>Bookings</Text>
+                
                 <FlatList
                     data={bookings}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                        <View>
-                           <Text>{item.listing.carMake} {item.listing.carModel} {item.reservation.Status} {item.reservation.date}{item.ls}{item.reservation.listingId}</Text>
-                           <Image source={{ uri: item.listing.imageUrl }} style={styles.image} />
+                        <View >
+                            <View style={{flexDirection:"row", justifyContent:"space-between"}}>
+                             <Text style={styles.text}>Confirmation Code: {item.reservation.confirmationCode}</Text>
+                            <Text >{item.reservation.Status}</Text>
+                            </View>
+                            <View style={{flexDirection:"row", justifyContent:"space-between"}}>
+                                <Image source={{ uri: item.renter.image }} style={styles.image} />
+                            <View> 
+                            <Text>Renter:  <Text style={{fontWeight:"bold"}}>{item.renter.name}</Text></Text>
+                           <Text >{item.listing.color} {item.listing.carMake} {item.listing.carModel}</Text>
+                            
+                            <Text>Date: <Text style={{fontWeight:"bold"}}>{item.reservation.Date}</Text></Text>
+                            <Text>Price with Tax: <Text style={{fontWeight:"bold"}}>${item.reservation.pricePaid}</Text></Text>
+                            </View>
+                            
+                           
+                           {item.reservation.Status=="Confirmed"?
                             <Pressable onPress={() => cancelBooking(item.id)}
                                 style={({ pressed }) => ({
-                                    borderWidth: 1,
-                                    marginTop: 15,
-                                    padding: 15,
+                                    backgroundColor: pressed ? "#a34141" : "#FF6868", // Change the background color here
                                     borderRadius: 5,
-                                    backgroundColor: pressed ? "#81b0ff" : "#767577",
+                                    width: 100,
+                                    height: 50,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    textAlign: "center",
                                 })}>
-                                <Text>Cancel Booking</Text>
+                                <Text style={{color:"white"}}>Cancel</Text>
                             </Pressable>
-                            <Pressable onPress={() => confirmBooking(item.id)}
-                                style={({ pressed }) => ({
-                                    borderWidth: 1,
-                                    marginTop: 15,
-                                    padding: 15,
-                                    borderRadius: 5,
-                                    backgroundColor: pressed ? "#81b0ff" : "#767577",
+                           
+                           :
+                             <Pressable onPress={() => confirmBooking(item.id)}
+                             style={({ pressed }) => ({
+                                backgroundColor: pressed ? "#4a3a78" : "#9978f5", // Change the background color here
+                                borderRadius: 5,
+                                width: 100,
+                                height: 50,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                textAlign: "center",
                                 })}>
-                                <Text>Confirm Booking</Text>
+                                <Text style={{color:"white"}}>Confirm</Text>
                             </Pressable>
-                            {/* Render other booking details as needed */}
+                           }</View>
                         </View>
                     )}
+                    ItemSeparatorComponent={() => {
+                        return <View style={styles.listItemBorder}></View>;
+                      }}
                 />
             </View>
         </SafeAreaView>
@@ -145,12 +158,18 @@ const styles = StyleSheet.create({
         paddingVertical: 8
     },
     text: {
-        fontSize: 18,
-        paddingVertical: 4
+        fontSize: 16,
+        paddingVertical: 4,
+        fontWeight:"bold",
     },
     image: {
         width: 100,
         height: 100, // Adjust the height as needed
         resizeMode: 'cover', // or 'contain' or 'stretch' as per your requirement
     },
+    listItemBorder: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        marginVertical:5,
+      },
 });

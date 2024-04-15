@@ -18,6 +18,8 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { useEffect } from "react";
+
+
 const AddListing = ({ navigation }) => {
     const [carMake, setCarMake] = useState("");
     const [carModel, setCarModel] = useState("");
@@ -216,7 +218,7 @@ clearInputFields()
                     <Text style={styles.label}>Where is your car Located?</Text>
                     <View style={styles.addressContainer}>
                         <View style={styles.inputContainer}>
-                            <Entypo name="location-pin" size={24} color="white" style={styles.icon} />
+                            <Entypo name="location-pin" size={24} style={styles.icon} />
                             <TextInput
                                 style={styles.input2}
                                 onChangeText={setAddressFromUI}
@@ -288,8 +290,7 @@ clearInputFields()
                     <Text style={[styles.fontText, { marginTop: 10, marginBottom: 10 }]}> Price: </Text>
                     <View style={{ flexDirection: "row", gap: 10 }}>
                         <TextInput
-                            style={{ color: "white", fontSize: 16 }}
-                            placeholderTextColor="rgba(255, 255, 255, 0.6)"
+                            style={{ fontSize: 16 }}
                             placeholder="Enter price (example 150)"
                             value={pricePerDay}
                             onChangeText={setPricePerDay}
@@ -332,7 +333,7 @@ clearInputFields()
                     <Pressable
                         onPress={createListing}
                         style={({ pressed }) => ({
-                            borderWidth: 1,
+                           
                             marginTop: 15,
                             padding: 15,
                             borderRadius: 5,
@@ -344,7 +345,8 @@ clearInputFields()
                                 color: "#fff",
                                 fontSize: 18,
                                 fontWeight: "bold",
-                                textAlign: "center",
+                                textAlign: "center", 
+                               
                             }}
                         >
                             Create Listing{" "}
@@ -358,7 +360,7 @@ clearInputFields()
 
 const styles = StyleSheet.create({
     body: {
-        backgroundColor: "#000",
+      
         flex: 1,
     },
     container: {
@@ -374,7 +376,7 @@ const styles = StyleSheet.create({
     headingText: {
         fontSize: 24,
         paddingVertical: 8,
-        color: "white",
+       
         textAlign: "center",
         marginBottom: 10,
     },
@@ -382,7 +384,7 @@ const styles = StyleSheet.create({
         paddingTop: 5,
         paddingBottom: 5,
         fontSize: 18,
-        color: "#fff",
+       
     },
     input: {
         backgroundColor: "#FEFBF6",
@@ -391,7 +393,7 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 12,
         marginVertical: 10,
-        color: "#000",
+       
     },
     input2: {
         backgroundColor: "#FEFBF6",
@@ -400,10 +402,10 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 12,
         marginVertical: 10,
-        color: "#000",
+        
     },
     label: {
-        color: "white",
+       
         fontSize: 20,
         marginTop: 10,
         marginBottom: 5,
@@ -412,13 +414,12 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 0,
         top: 0,
-        color: "white",
+       
         fontSize: 18,
     },
     line: {
         width: 200,
         borderBottomWidth: 1,
-        borderBottomColor: "white",
         marginTop: 5,
         marginBottom: 15,
     },
@@ -436,7 +437,7 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 12,
         marginVertical: 5,
-        color: "#000",
+       
         opacity: 0.8,
     },
     uploadLabel: {

@@ -35,12 +35,11 @@ const LoginScreen = ({navigation}) => {
                     if (docSnap.exists()) { 
                         alert("Login complete!")
                         // then, navigate them to the next screen
-                        navigation.navigate("Manage Bookings")
+                        navigation.navigate("Lend a Wheel")
                         console.log("Document data:", docSnap.data());
 
                     } else if (docSnap.data() === undefined) {
                       // log user out if it is not an owner account
-                      alert("You are trying to sign in to owner app with renter account")
                       await signOut(auth)
                     }
                  } catch (err) {
@@ -58,7 +57,7 @@ const LoginScreen = ({navigation}) => {
         } else {
             // someone is logged in so show some kind of message
             alert("You are already logged in!")
-            navigation.navigate("Manage Bookings")
+            navigation.navigate("Lend a Wheel")
         }
     }
 
