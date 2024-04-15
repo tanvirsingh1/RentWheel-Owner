@@ -35,7 +35,7 @@ const LoginScreen = ({navigation}) => {
                     if (docSnap.exists()) { 
                         alert("Login complete!")
                         // then, navigate them to the next screen
-                        navigation.navigate("Land a Wheel")
+                        navigation.navigate("Lend a Wheel")
                         console.log("Document data:", docSnap.data());
 
                     } else if (docSnap.data() === undefined) {
@@ -57,7 +57,7 @@ const LoginScreen = ({navigation}) => {
         } else {
             // someone is logged in so show some kind of message
             alert("You are already logged in!")
-            navigation.navigate("Land a Wheel")
+            navigation.navigate("Lend a Wheel")
         }
     }
 

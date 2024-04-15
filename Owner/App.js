@@ -66,7 +66,7 @@ export default function App() {
       < NavigationContainer>
          <Stack.Navigator>    
         <Stack.Screen name="Login" component={LoginScreen}/>
-          <Stack.Screen name="Land a Wheel" component={TabContainerComponent} options={({ navigation }) => ({
+          <Stack.Screen name="Lend a Wheel" component={TabContainerComponent} options={({ navigation }) => ({
               headerRight: () => (
                 <View style={{ margin: 10 }}>
                   <Button title="Logout" onPress={() => logoutPressed(navigation)} />

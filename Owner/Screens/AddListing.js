@@ -18,6 +18,8 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { useEffect } from "react";
+
+
 const AddListing = ({ navigation }) => {
     const [carMake, setCarMake] = useState("");
     const [carModel, setCarModel] = useState("");

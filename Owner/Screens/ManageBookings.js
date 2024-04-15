@@ -3,12 +3,8 @@ import { useState, useEffect } from "react";
 import { collection, getDocs, query, where, onSnapshot, doc, getDoc, updateDoc  } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfig';
 
-const ManageBookings = ({ navigation }) => {
+const ManageBookings = ({  }) => {
     const [bookings, setBookings] = useState([]);
-
-    const CheckListings = () => {
-        navigation.navigate("Listing");
-    }
 
     const cancelBooking = async (bookingId) => {
         try {
