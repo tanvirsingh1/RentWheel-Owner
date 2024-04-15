@@ -59,7 +59,8 @@ const TabContainerComponent = () => {
     tabBarActiveTintColor: "#7C4DFF",
     tabBarInactiveTintColor: "gray",
 })}>
-      <Tab.Screen name="Manage Bookings" component={ManageBookings} />
+      <Tab.Screen name="Manage Bookings" component={ManageBookings} options={({ navigation }) => ({
+      headerTitleAlign:"left" })}/>
     <Tab.Screen name="All Listings" component={ListingsScreen} options={({ navigation }) => ({
           headerRight: () => (
             <View style={{ margin: 10 }}>
