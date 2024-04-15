@@ -60,17 +60,18 @@ const ListingsScreen = ({navigation}) => {
                     renderItem={({ item }) => (
                         
                         <View >
-                            <Text style={styles.title}>{item.listing.color} {item.listing.carMake} {item.listing.carModel}</Text>
+                            <Text style={styles.title}>{item.listing.color} {item.listing.carMake} {item.listing.carModel}{item.listing.isElectric ?  <Text>, Electric</Text>  : ""}</Text>
                             
                             <View style={{flexDirection:"row", gap:10}}>
                                 <Image source={{ uri: item.listing.imageUrl }} style={styles.image} />
-                            <View>
+                            <View> 
+                          
                             <Text>Price per day: <Text style={{fontWeight:"bold"}}>${item.listing.pricePerDay}</Text></Text> 
                             <Text>Year: <Text style={{fontWeight:"bold"}}>{item.listing.year}</Text></Text> 
                             <Text>Capacity: <Text style={{fontWeight:"bold"}}>{item.listing.capacity} L</Text></Text>
                             <Text>Engine Power: <Text style={{fontWeight:"bold"}}>{item.listing.enginePower} HP</Text></Text>
                             <Text>Mileage: <Text style={{fontWeight:"bold"}}>{item.listing.mileage} km</Text></Text>
-                            
+                           
                         </View></View><Text><Text style={{fontWeight:"bold"}}>{item.address}</Text></Text></View>
                     )}
                     ItemSeparatorComponent={() => {
