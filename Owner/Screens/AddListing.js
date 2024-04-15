@@ -170,7 +170,7 @@ clearInputFields()
             });
             console.log("Document written with ID: ", docRef.id);
             alert("Listing created successfully!");
-            navigation.navigate("Listing")
+            navigation.navigate("All Listings")
 
         } catch (error) {
             console.error("Error adding document: ", error);
