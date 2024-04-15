@@ -3,8 +3,14 @@ import { View, Text, FlatList, StyleSheet, SafeAreaView, Pressable } from 'react
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfig';
 
-const ListingsScreen = () => {
+const ListingsScreen = ({navigation}) => {
     const [listings, setListings] = useState([]);
+
+
+    const AddListing=()=>
+    {
+        navigation.navigate("Add Listing")
+    }
 
     useEffect(() => {
         const ownerListingsQuery = query(collection(db, 'Listings'), where('ownerId', '==', auth.currentUser.uid));
@@ -23,15 +29,22 @@ const ListingsScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View>
+            <Pressable onPress={AddListing} style={styles.btn}>
+                    <Text style={styles.btnLabel}>Add Listing</Text>
+                </Pressable> 
                 <Text style={styles.heading}>Listings</Text>
                 <FlatList
                     data={listings}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                        <View style={styles.listing}>
+                        <View >
                             <Text style={styles.title}>{item.carMake}</Text>
                         </View>
                     )}
+                    ItemSeparatorComponent={() => {
+                        return <View style={styles.listItemBorder}></View>;
+                      }}
+                
                 />
             </View>
         </SafeAreaView>
@@ -59,6 +72,22 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
+    btn: {
+        borderWidth: 1,
+        borderColor: "#141D21",
+        borderRadius: 8,
+        paddingVertical: 16,
+        marginVertical: 10
+    },
+    btnLabel: {
+        fontSize: 16,
+        textAlign: "center"
+    },
+    listItemBorder: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        marginVertical:5,
+      },
 });
 
 export default ListingsScreen;
