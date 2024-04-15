@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, FlatList, SafeAreaView,Image } from 'react-native';
+import { StyleSheet, Text, View, Pressable, FlatList, SafeAreaView,Image ,Alert} from 'react-native';
 import { useState, useEffect } from "react";
 import { collection, getDocs, query, where, onSnapshot, doc, getDoc, updateDoc  } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfig';
@@ -16,6 +16,7 @@ const ManageBookings = ({ navigation }) => {
             await updateDoc(bookingRef, {
                 Status: "Cancelled"
             });
+            Alert.alert("Success", "Booking cancelled successfully!");
             console.log("Booking cancelled successfully!");
         } catch (error) {
             console.error("Error cancelling booking: ", error);
@@ -38,18 +39,25 @@ const ManageBookings = ({ navigation }) => {
         const fetchBookings = async () => {
             try {
                 const ownerBookingsQuery = query(collection(db, 'Reservation'), where('ownerId', '==', auth.currentUser.uid));
+                console.log("current id is", auth.currentUser.uid)
                 const unsubscribe = onSnapshot(ownerBookingsQuery, async (snapshot) => {
                     const bookingsData = [];
                     for (const docu of snapshot.docs) {
+                        console.log("data is", docu.data())
                         const reservation = docu.data();
+                       
                         const listingRef = doc(db, 'Listings', reservation.listingId)
                         const listingDoc = await getDoc(listingRef);
+                        console.log("Listing is",listingDoc.data())
+                      
+                    
                         if (listingDoc.exists()) {
                             const listingData = { id: listingDoc.id, ...listingDoc.data() };
                             const booking = { id: docu.id, reservation: reservation, listing: listingData };
                             bookingsData.push(booking);
-                            console.log("Image url is",listingData.imageUrl)
+                           
                         }
+                       
                     }
                     setBookings(bookingsData);
                 });
@@ -78,7 +86,7 @@ const ManageBookings = ({ navigation }) => {
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <View>
-                           <Text>{item.listing.carMake} {item.listing.carModel} {item.reservation.Status} {item.reservation.date}{item.ls}</Text>
+                           <Text>{item.listing.carMake} {item.listing.carModel} {item.reservation.Status} {item.reservation.date}{item.ls}{item.reservation.listingId}</Text>
                            <Image source={{ uri: item.listing.imageUrl }} style={styles.image} />
                             <Pressable onPress={() => cancelBooking(item.id)}
                                 style={({ pressed }) => ({
