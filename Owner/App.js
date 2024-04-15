@@ -1,45 +1,100 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import {db} from './firebaseConfig'
-import { collection, addDoc } from "firebase/firestore";
-import { doc, getDoc } from "firebase/firestore";
+import {View, Button, Text} from "react-native"
 
-const Checking = async() =>{
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import LoginScreen from "./Screens/Login";
+import ManageBookings from "./Screens/ManageBookings";
+import ListingsScreen from "./Screens/Listingscreen";
+import AddListing from "./Screens/AddListing"
+import { auth } from './firebaseConfig';
+import { signOut } from "firebase/auth";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Entypo } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+
+
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+const logoutPressed = async (navigation) => {
+  // TODO: Code to logout
+  console.log("Logging the user out..")
   try {
-    // Specify which collection and document id to query
-    const docRef = doc(db, "Users", "EDEWUsF0uwhnAnxewbQZ");
-    // Attempt to get the specified document
-    const docSnap = await getDoc(docRef);
- 
- 
-    // use the .exists() function to check if the document 
-    // could be found
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-    } else if (docSnap.data() === undefined) {
-      // docSnap.data() will be undefined in this case
-      console.log("No such document!");
-    }
- } catch (err) {
-    console.log(err)
- }
- 
+      if (auth.currentUser === null) {
+          console.log("logoutPressed: There is no user to logout!")
+      } 
+      else {
+          await signOut(auth)
+          console.log("logoutPressed: Logout complete")
+          alert("logout complete!")
+          navigation.navigate("Login")
+      }
+  } catch(error) {
+      console.log("ERROR when logging out")
+      console.log(error)
+  }            
+}
+
+const gotoAddListing = (navigation) => {
+  navigation.navigate("Add Listing");
+};
+
+const TabContainerComponent = () => {
+  
+  return (
+    <Tab.Navigator screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+      
+        if (route.name === 'All Listings') {
+         
+          return  <Feather name="list" size={24} color="black" />
+
+        }
+        if (route.name === 'Manage Bookings') {
+          return <AntDesign name="book" size={24} color="black" />;
+        }
+      },
+    tabBarActiveTintColor: "#7C4DFF",
+    tabBarInactiveTintColor: "gray",
+})}>
+      <Tab.Screen name="Manage Bookings" component={ManageBookings} options={({ navigation }) => ({
+      headerTitleAlign:"left" })}/>
+    <Tab.Screen name="All Listings" component={ListingsScreen} options={({ navigation }) => ({
+          headerRight: () => (
+            
+            <Button
+              onPress={() => { gotoAddListing(navigation) }}
+              title="Add Listing"
+              color="#7C4DFF"
+            
+            />
+          
+          )
+        })}/>
+   </Tab.Navigator>
+  )
 }
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+ 
+  return ( 
+      < NavigationContainer>
+         <Stack.Navigator>    
+        <Stack.Screen name="Login" component={LoginScreen}/>
+          <Stack.Screen name="Lend a Wheel" component={TabContainerComponent} options={({ navigation }) => ({
+              headerRight: () => (
+                
+                  <Button title="Logout" onPress={() => logoutPressed(navigation)} color="red" />
+              
+              ),
+              headerLeft: null, // If you want to remove the back button, set this to null
+            })}/>
+          <Stack.Screen name="Add Listing" component={AddListing} />
+         
+        </Stack.Navigator>
+         
+      </NavigationContainer>
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
