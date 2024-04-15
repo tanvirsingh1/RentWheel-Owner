@@ -70,10 +70,6 @@ const ManageBookings = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.body}>
             <View style={styles.container}>
-                {/* <Text style={styles.text}>Got anything new?</Text>
-                <Pressable onPress={AddListingPressed} style={styles.btn}>
-                    <Text style={styles.btnLabel}>Add New Listing</Text>
-    </Pressable>*/}
                 
                 <FlatList
                     data={bookings}
@@ -88,17 +84,17 @@ const ManageBookings = ({ navigation }) => {
                                 <Image source={{ uri: item.renter.image }} style={styles.image} />
                             <View> 
                             <Text>Renter:  <Text style={{fontWeight:"bold"}}>{item.renter.name}</Text></Text>
-                           <Text >{item.listing.carMake} {item.listing.carModel}</Text>
+                           <Text >{item.listing.color} {item.listing.carMake} {item.listing.carModel}</Text>
                             
                             <Text>Date: <Text style={{fontWeight:"bold"}}>{item.reservation.Date}</Text></Text>
                             <Text>Price with Tax: <Text style={{fontWeight:"bold"}}>${item.reservation.pricePaid}</Text></Text>
                             </View>
                             
                            
-                           
+                           {item.reservation.Status=="Confirmed"?
                             <Pressable onPress={() => cancelBooking(item.id)}
                                 style={({ pressed }) => ({
-                                    backgroundColor: pressed ? "#5c8eff" : "#FF6868", // Change the background color here
+                                    backgroundColor: pressed ? "#a34141" : "#FF6868", // Change the background color here
                                     borderRadius: 5,
                                     width: 100,
                                     height: 50,
@@ -107,20 +103,22 @@ const ManageBookings = ({ navigation }) => {
                                     textAlign: "center",
                                 })}>
                                 <Text style={{color:"white"}}>Cancel</Text>
-                            </Pressable></View>
+                            </Pressable>
                            
-                           
-                           {/*  <Pressable onPress={() => confirmBooking(item.id)}
-                                style={({ pressed }) => ({
-                                    borderWidth: 1,
-                                    marginTop: 15,
-                                    padding: 15,
-                                    borderRadius: 5,
-                                    backgroundColor: pressed ? "#81b0ff" : "#767577",
+                           :
+                             <Pressable onPress={() => confirmBooking(item.id)}
+                             style={({ pressed }) => ({
+                                backgroundColor: pressed ? "#4a3a78" : "#9978f5", // Change the background color here
+                                borderRadius: 5,
+                                width: 100,
+                                height: 50,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                textAlign: "center",
                                 })}>
-                                <Text>Confirm Booking</Text>
-                            </Pressable>*/}
-                            {/* Render other booking details as needed */}
+                                <Text style={{color:"white"}}>Confirm</Text>
+                            </Pressable>
+                           }</View>
                         </View>
                     )}
                     ItemSeparatorComponent={() => {

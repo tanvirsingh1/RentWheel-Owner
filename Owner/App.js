@@ -13,90 +13,6 @@ import { Entypo } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 
-/*
-const Tab = createBottomTabNavigator();
-const logoutPressed = async (navigation) => {
-  // TODO: Code to logout
-  console.log("Logging the user out..")
-  try {
-      if (auth.currentUser === null) {
-          console.log("logoutPressed: There is no user to logout!")
-      } 
-      else {
-          await signOut(auth)
-          console.log("logoutPressed: Logout complete")
-          alert("logout complete!")
-          navigation.navigate("Login")
-      }
-  } catch(error) {
-      console.log("ERROR when logging out")
-      console.log(error)
-  }            
-}
-
-const Stack = createStackNavigator();
-const MainTabNavigator = () => (
-  <Tab.Navigator
-  
-    screenOptions={({ route }) => ({
-
-      tabBarIcon: ({ focused, color, size }) => {
-      
-        if (route.name === 'Add Listing') {
-          return <Entypo name="plus" size={24} color="black" />;
-        }
-        if (route.name === 'Manage Bookings') {
-          return <FontAwesome5 name="list" size={24} color="black" />;
-        }
-      },
-      
-      tabBarActiveTintColor: '#7C4DFF',
-      tabBarInactiveTintColor: 'gray',
-    })}
-  >
-    <Tab.Screen name="Manage Bookings" component={ManageBookings} />
-    <Tab.Screen name="Add Listing" component={AddListing} />
-  </Tab.Navigator>
-);
-
-export default function App() {
-  const [user, setUser] = useState(null);
- 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user);
-    });
-
-    return unsubscribe;
-  }, []);
-
-  return (
-    <NavigationContainer>
-      {user ? (
-        <Stack.Navigator initialRouteName="Main">
-          <Stack.Screen
-            name="Main"
-            component={MainTabNavigator}
-            options={{
-              headerRight: () => (
-                <View style={{ margin: 10 }}>
-                  <Button title="Logout" onPress={() => logoutPressed(navigation)} />
-                </View>
-              ),
-              headerLeft: null,
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen name="Listing" component={ListingsScreen} />
-        </Stack.Navigator>
-      ) : (
-        <Stack.Navigator>
-          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: true }} />
-        </Stack.Navigator>
-      )}
-    </NavigationContainer>
-  )
-}*/
 
 
 const Stack = createStackNavigator();
@@ -121,23 +37,6 @@ const logoutPressed = async (navigation) => {
   }            
 }
 
-const StackContainerComponent = ( )=>
-{
-<Stack.Navigator>    
-        <Stack.Screen name="Login" component={LoginScreen}/>
-          <Stack.Screen name="Land a Wheel" component={TabContainerComponent} options={({ navigation }) => ({
-              headerRight: () => (
-                <View style={{ margin: 10 }}>
-                  <Button title="Logout" onPress={() => logoutPressed(navigation)} />
-                </View>
-              ),
-              headerLeft: null, // If you want to remove the back button, set this to null
-            })}/>
-          <Stack.Screen name="ChosenCar" component={ChosenCar} />
-         
-        </Stack.Navigator>
-
-}
 
 const TabContainerComponent = () => {
   
